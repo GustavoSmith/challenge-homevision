@@ -17,10 +17,10 @@ const grid =
 export function PropertiesFeed() {
   const {
     data,
-    error,
     fetchNextPage,
     hasNextPage,
     isError,
+    isFetchNextPageError,
     isFetchingNextPage,
     isPending,
     isSuccess,
@@ -45,7 +45,12 @@ export function PropertiesFeed() {
     const observer = new IntersectionObserver(
       (entries) => {
         const [entry] = entries;
-        if (entry?.isIntersecting && hasNextPage && !isFetchingNextPage) {
+        if (
+          entry?.isIntersecting &&
+          hasNextPage &&
+          !isFetchingNextPage &&
+          !isFetchNextPageError
+        ) {
           void fetchNextPage();
         }
       },
@@ -54,7 +59,7 @@ export function PropertiesFeed() {
 
     observer.observe(el);
     return () => observer.disconnect();
-  }, [fetchNextPage, hasNextPage, isFetchingNextPage]);
+  }, [fetchNextPage, hasNextPage, isFetchNextPageError, isFetchingNextPage]);
 
   const houses = data?.pages.flatMap((p) => p.houses) ?? [];
 
@@ -68,14 +73,15 @@ export function PropertiesFeed() {
     );
   }
 
-  if (isError) {
-    const msg = error instanceof Error ? error.message : "Something went wrong. Try again!";
+  if (isError && houses.length === 0) {
     return (
       <div
         className="flex flex-col items-center gap-4 rounded-xl border border-border bg-card p-8 text-center shadow-sm"
         role="alert"
       >
-        <p className="max-w-md text-sm text-destructive">{msg}</p>
+        <p className="max-w-md text-sm text-muted-foreground">
+          We ran into a problem while loading the properties. Please try again.
+        </p>
         <Button type="button" onClick={() => void refetch()}>
           Try again
         </Button>
@@ -98,6 +104,20 @@ export function PropertiesFeed() {
       </div>
 
       <div ref={sentinelRef} aria-hidden className="h-1 w-full" />
+
+      {isFetchNextPageError ? (
+        <div
+          className="flex flex-col items-center gap-3 rounded-xl border border-border bg-card p-6 text-center shadow-sm"
+          role="alert"
+        >
+          <p className="max-w-md text-sm text-muted-foreground">
+            We had a problem while loading more properties. Please try again.
+          </p>
+          <Button type="button" onClick={() => void fetchNextPage()}>
+            Try again
+          </Button>
+        </div>
+      ) : null}
 
       {isFetchingNextPage ? (
         <div className={grid}>
