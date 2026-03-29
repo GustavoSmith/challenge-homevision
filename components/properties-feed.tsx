@@ -61,7 +61,7 @@ export function PropertiesFeed() {
 
   if (isPending) {
     return (
-      <div className={grid}>
+      <div data-testid="feed-loading" className={grid}>
         {Array.from({ length: SKELETON_INITIAL }, (_, i) => (
           <PropertyCardSkeleton key={i} />
         ))}
