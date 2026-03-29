@@ -4,12 +4,10 @@ import { useInfiniteQuery } from "@tanstack/react-query";
 import { useEffect, useRef } from "react";
 
 import { Button } from "@/components/ui/button";
-import { fetchHousesPage } from "@/lib/houses";
+import { PER_PAGE, fetchHousesPage } from "@/lib/houses";
 
 import { PropertyCard } from "./property-card";
 import { PropertyCardSkeleton } from "./property-card-skeleton";
-
-const PER_PAGE = 20;
 const SKELETON_INITIAL = 6;
 const SKELETON_MORE = 3;
 

@@ -18,6 +18,8 @@ export type HousesErrorResponse = {
 
 export type HousesApiResponse = HousesSuccessResponse | HousesErrorResponse;
 
+export const PER_PAGE = 20;
+
 export const HOUSES_API_URL =
   "https://staging.homevision.co/api_project/houses";
 
@@ -67,4 +69,22 @@ export async function fetchHousesPage(
   }
 
   return body;
+}
+
+export function getPageForHouseId(id: number, perPage = PER_PAGE): number {
+  return Math.floor(id / perPage) + 1;
+}
+
+/**
+ * No individual-house endpoint exists; we derive the page from the id
+ * and fetch the paginated list to find the house within the response.
+ * Network retries are handled by React Query (`retry`) on the consumer.
+ */
+export async function fetchHouseById(
+  id: number,
+  perPage = PER_PAGE,
+): Promise<House | null> {
+  const page = getPageForHouseId(id, perPage);
+  const { houses } = await fetchHousesPage(page, perPage);
+  return houses.find((h) => h.id === id) ?? null;
 }
