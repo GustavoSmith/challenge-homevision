@@ -22,6 +22,7 @@ export function PropertyCard({ house }: { house: House }) {
     <Link
       href={`/properties/${house.id}`}
       onClick={() => {
+        // This is a small hack to allow the user to go back to the property listing page without losing the position the user was at without causing bugs when the first navigation is to the property detail page.
         sessionStorage.setItem(PROPERTY_LISTING_RETURN_KEY, String(house.id));
         queryClient.setQueryData(["house", house.id], house);
       }}

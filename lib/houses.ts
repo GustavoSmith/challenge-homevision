@@ -88,6 +88,7 @@ export async function fetchHousesPage(
 }
 
 export function getPageForHouseId(id: number, perPage = PER_PAGE): number {
+  // Because we don't have an individual-house endpoint, we need to derive the page from the id.
   return Math.ceil(id / perPage);
 }
 

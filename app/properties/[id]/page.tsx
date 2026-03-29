@@ -21,6 +21,9 @@ export default function PropertyPage() {
 function ResolvedProperty({ id }: { id: number }) {
   const queryClient = useQueryClient();
   const queryKey = ["house", id] as const;
+
+  // The idea is simple: if the user clicks on a property card, we already have the data in the query cache. If they enter the page via URL, we fetch the data from the API.
+
   const cachedHouse = queryClient.getQueryData<House>(queryKey);
   const cachedHouseUpdatedAt = queryClient.getQueryState<House>(queryKey)?.dataUpdatedAt;
   const {

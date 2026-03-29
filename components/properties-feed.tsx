@@ -30,6 +30,7 @@ export function PropertiesFeed() {
     queryFn: ({ pageParam }) => fetchHousesPage(pageParam as number, PER_PAGE),
     initialPageParam: 1,
     getNextPageParam: (lastPage, _, lastPageParam) => {
+      // The API doesn't have a total count of houses, so we need to check if the last page has less than the expected number of houses.
       if (lastPage.houses.length === 0) return undefined;
       if (lastPage.houses.length < PER_PAGE) return undefined;
       return (lastPageParam as number) + 1;
@@ -49,6 +50,7 @@ export function PropertiesFeed() {
           void fetchNextPage();
         }
       },
+      // This is a small margin to the bottom of the page to trigger the next page load before the user reaches the end of the page.
       { rootMargin: "280px", threshold: 0 },
     );
 
