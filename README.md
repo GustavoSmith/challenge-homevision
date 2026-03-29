@@ -1,36 +1,40 @@
-This is a [Next.js](https://nextjs.org) project bootstrapped with [`create-next-app`](https://nextjs.org/docs/app/api-reference/cli/create-next-app).
+## [Homevision Challenge: House listings](https://challenge-homevision.vercel.app/)
 
-## Getting Started
+An implementation of an infinite scroll property listing page, available at [challenge-homevision.vercel.app](https://challenge-homevision.vercel.app/)
 
-First, run the development server:
+### Running Locally
+
+This project is based on Next.js. Run the development server with:
 
 ```bash
+npm i
 npm run dev
-# or
-yarn dev
-# or
-pnpm dev
-# or
-bun dev
 ```
 
-Open [http://localhost:3000](http://localhost:3000) with your browser to see the result.
+### Running Tests
 
-You can start editing the page by modifying `app/page.tsx`. The page auto-updates as you edit the file.
+You can run the tests with:
 
-This project uses [`next/font`](https://nextjs.org/docs/app/building-your-application/optimizing/fonts) to automatically optimize and load [Geist](https://vercel.com/font), a new font family for Vercel.
+```bash
+npm run test
+```
 
-## Learn More
+### Linting
 
-To learn more about Next.js, take a look at the following resources:
+You can run the linter with:
 
-- [Next.js Documentation](https://nextjs.org/docs) - learn about Next.js features and API.
-- [Learn Next.js](https://nextjs.org/learn) - an interactive Next.js tutorial.
+```bash
+npm run lint
+```
 
-You can check out [the Next.js GitHub repository](https://github.com/vercel/next.js) - your feedback and contributions are welcome!
+## Choices
 
-## Deploy on Vercel
+**Next.js** - Industry standard, useful for built-in routing and image optimization. It could've been a Vite project as well.
 
-The easiest way to deploy your Next.js app is to use the [Vercel Platform](https://vercel.com/new?utm_medium=default-template&filter=next.js&utm_source=create-next-app&utm_campaign=create-next-app-readme) from the creators of Next.js.
+**TanStack Query** - For data fetching and caching, with built-in pagination and error handling.
 
-Check out our [Next.js deployment documentation](https://nextjs.org/docs/app/building-your-application/deploying) for more details.
+**Tailwind CSS** - For styling, with built-in support for shadcn/ui. Also used Lucide Icons for the icons.
+
+**Playwright** - Primarly because of it's browser support and ease of use.
+
+**Oxlint** - For linting and formatting. I wanted to try something different than ESLint + Prettier and this is a nice and performant alternative.
