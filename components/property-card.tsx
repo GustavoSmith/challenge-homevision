@@ -1,10 +1,10 @@
 "use client";
 
 import { useQueryClient } from "@tanstack/react-query";
-import Image from "next/image";
 import Link from "next/link";
 import { ViewTransition } from "react";
 
+import { PropertyImage } from "@/components/property-image";
 import { Card, CardContent, CardFooter, CardHeader, CardTitle } from "@/components/ui/card";
 import { PROPERTY_LISTING_RETURN_KEY, type House } from "@/lib/houses";
 
@@ -30,11 +30,12 @@ export function PropertyCard({ house }: { house: House }) {
       <Card className="h-full overflow-hidden shadow-sm ring-1 ring-border/70 transition hover:-translate-y-0.5 hover:shadow-lg hover:ring-primary/30">
         <ViewTransition name={imageTransitionName}>
           <div className="property-transition-media relative aspect-[4/3] w-full overflow-hidden bg-muted">
-            <Image
+            <PropertyImage
               src={house.photoURL}
               alt={house.address}
-              fill
               className="object-cover transition-transform duration-300 group-hover/card:scale-[1.02]"
+              fallbackClassName="flex h-full w-full items-center justify-center bg-muted text-muted-foreground"
+              iconClassName="h-12 w-12"
               sizes="(max-width: 640px) 100vw, (max-width: 1024px) 50vw, (max-width: 1280px) 33vw, 25vw"
             />
           </div>

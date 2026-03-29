@@ -1,10 +1,10 @@
 "use client";
 
-import Image from "next/image";
 import { ArrowLeft } from "lucide-react";
 import { useRouter } from "next/navigation";
 import { ViewTransition } from "react";
 
+import { PropertyImage } from "@/components/property-image";
 import { PROPERTY_LISTING_RETURN_KEY, type House } from "@/lib/houses";
 
 const priceFormatter = new Intl.NumberFormat("en-US", {
@@ -49,13 +49,14 @@ export function PropertyDetail({ house }: { house: House }) {
           <div className="grid grid-cols-1 md:grid-cols-2">
             <ViewTransition name={imageTransitionName}>
               <div className="property-transition-media relative aspect-[4/3] w-full bg-muted md:aspect-auto md:min-h-[400px]">
-                <Image
+                <PropertyImage
                   src={house.photoURL}
                   alt={house.address}
-                  fill
                   priority
                   loading="eager"
                   className="object-cover"
+                  fallbackClassName="flex h-full w-full items-center justify-center bg-muted text-muted-foreground"
+                  iconClassName="h-16 w-16"
                   sizes="(max-width: 768px) 100vw, 50vw"
                 />
               </div>
