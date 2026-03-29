@@ -1,7 +1,9 @@
+"use client";
+
 import Image from "next/image";
-import Link from "next/link";
-import { ViewTransition } from "react";
 import { ArrowLeft } from "lucide-react";
+import { useRouter } from "next/navigation";
+import { ViewTransition } from "react";
 
 import type { House } from "@/lib/houses";
 
@@ -12,6 +14,7 @@ const priceFormatter = new Intl.NumberFormat("en-US", {
 });
 
 export function PropertyDetail({ house }: { house: House }) {
+  const router = useRouter();
   const imageTransitionName = `property-image-${house.id}`;
 
   return (
@@ -21,14 +24,21 @@ export function PropertyDetail({ house }: { house: House }) {
         className="pointer-events-none absolute inset-0 -z-10 bg-gradient-to-b from-primary/[0.06] via-background to-muted/40"
       />
 
-      <div className="mx-auto w-full max-w-6xl flex-1 px-4 py-8 sm:px-6 lg:px-8">
-        <Link
-          href="/"
-          className="mb-6 inline-flex items-center gap-1.5 text-sm font-medium text-muted-foreground transition-colors hover:text-foreground"
+      <div className="flex flex-col gap-6 mx-auto w-full max-w-6xl flex-1 px-4 py-8 sm:px-6 lg:px-8">
+        <button
+          type="button"
+          onClick={() => {
+            if (window.history.length > 1) {
+              router.back();
+              return;
+            }
+            router.push("/");
+          }}
+          className="hover:cursor-pointer inline-flex items-center gap-1.5 text-sm font-medium text-muted-foreground transition-colors hover:text-foreground"
         >
           <ArrowLeft className="h-4 w-4" />
           Go back to listings
-        </Link>
+        </button>
 
         <div className="overflow-hidden rounded-xl border border-border/70 bg-card shadow-sm ring-1 ring-border/30">
           <div className="grid grid-cols-1 md:grid-cols-2">
@@ -50,9 +60,7 @@ export function PropertyDetail({ house }: { house: House }) {
                 <p className="text-xs font-semibold uppercase tracking-widest text-muted-foreground">
                   Property
                 </p>
-                <h1 className="text-2xl font-medium sm:text-3xl">
-                  {house.address}
-                </h1>
+                <h1 className="text-2xl font-medium sm:text-3xl">{house.address}</h1>
               </div>
 
               <div className="space-y-1">
@@ -71,9 +79,7 @@ export function PropertyDetail({ house }: { house: House }) {
                 </p>
               </div>
 
-              <p className="text-xs tabular-nums text-muted-foreground">
-                ID #{house.id}
-              </p>
+              <p className="text-xs tabular-nums text-muted-foreground">ID #{house.id}</p>
             </div>
           </div>
         </div>
