@@ -6,7 +6,7 @@ import Link from "next/link";
 import { ViewTransition } from "react";
 
 import { Card, CardContent, CardFooter, CardHeader, CardTitle } from "@/components/ui/card";
-import type { House } from "@/lib/houses";
+import { PROPERTY_LISTING_RETURN_KEY, type House } from "@/lib/houses";
 
 const priceFormatter = new Intl.NumberFormat("en-US", {
   style: "currency",
@@ -21,8 +21,10 @@ export function PropertyCard({ house }: { house: House }) {
   return (
     <Link
       href={`/properties/${house.id}`}
-      prefetch={false}
-      onClick={() => queryClient.setQueryData(["house", house.id], house)}
+      onClick={() => {
+        sessionStorage.setItem(PROPERTY_LISTING_RETURN_KEY, String(house.id));
+        queryClient.setQueryData(["house", house.id], house);
+      }}
       className="block focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 rounded-xl"
     >
       <Card className="h-full overflow-hidden shadow-sm ring-1 ring-border/70 transition hover:-translate-y-0.5 hover:shadow-lg hover:ring-primary/30">

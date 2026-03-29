@@ -76,7 +76,7 @@ export function PropertiesFeed() {
         role="alert"
       >
         <p className="max-w-md text-sm text-muted-foreground">
-          We ran into a problem while loading the properties. Please try again.
+          We couldn't load the properties right now. Please try again.
         </p>
         <Button
           type="button"
@@ -116,7 +116,7 @@ export function PropertiesFeed() {
           role="alert"
         >
           <p className="max-w-md text-sm text-muted-foreground">
-            We had a problem while loading more properties. Please try again.
+            We couldn't load more properties right now. Please try again.
           </p>
           <Button
             type="button"

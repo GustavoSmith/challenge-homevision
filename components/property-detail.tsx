@@ -5,7 +5,7 @@ import { ArrowLeft } from "lucide-react";
 import { useRouter } from "next/navigation";
 import { ViewTransition } from "react";
 
-import type { House } from "@/lib/houses";
+import { PROPERTY_LISTING_RETURN_KEY, type House } from "@/lib/houses";
 
 const priceFormatter = new Intl.NumberFormat("en-US", {
   style: "currency",
@@ -28,7 +28,12 @@ export function PropertyDetail({ house }: { house: House }) {
         <button
           type="button"
           onClick={() => {
-            if (window.history.length > 1) {
+            const shouldGoBackToList =
+              sessionStorage.getItem(PROPERTY_LISTING_RETURN_KEY) === String(house.id);
+
+            sessionStorage.removeItem(PROPERTY_LISTING_RETURN_KEY);
+
+            if (shouldGoBackToList && window.history.length > 1) {
               router.back();
               return;
             }
@@ -49,6 +54,7 @@ export function PropertyDetail({ house }: { house: House }) {
                   alt={house.address}
                   fill
                   priority
+                  loading="eager"
                   className="object-cover"
                   sizes="(max-width: 768px) 100vw, 50vw"
                 />

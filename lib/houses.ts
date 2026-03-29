@@ -19,9 +19,28 @@ export type HousesErrorResponse = {
 export type HousesApiResponse = HousesSuccessResponse | HousesErrorResponse;
 
 export const PER_PAGE = 20;
+export const PROPERTY_LISTING_RETURN_KEY = "homevision:property-listing-return-id";
 
 export const HOUSES_API_URL =
   "https://staging.homevision.co/api_project/houses";
+
+function hasOkFlag(value: unknown): value is { ok: boolean } {
+  return (
+    typeof value === "object" &&
+    value !== null &&
+    "ok" in value &&
+    typeof (value as { ok: unknown }).ok === "boolean"
+  );
+}
+
+function isHousesErrorResponse(value: unknown): value is HousesErrorResponse {
+  return (
+    hasOkFlag(value) &&
+    value.ok === false &&
+    "message" in value &&
+    typeof (value as { message: unknown }).message === "string"
+  );
+}
 
 export async function fetchHousesPage(
   page: number,
@@ -46,15 +65,13 @@ export async function fetchHousesPage(
   }
 
   if (!res.ok) {
-    throw new Error(`Request failed with status ${res.status}.`);
+    if (isHousesErrorResponse(json) && json.message.trim()) {
+      throw new Error(json.message);
+    }
+    throw new Error("The server could not process the request.");
   }
 
-  if (
-    typeof json !== "object" ||
-    json === null ||
-    !("ok" in json) ||
-    typeof (json as { ok: unknown }).ok !== "boolean"
-  ) {
+  if (!hasOkFlag(json)) {
     throw new Error("Invalid response shape.");
   }
 
@@ -77,6 +94,7 @@ export function getPageForHouseId(id: number, perPage = PER_PAGE): number {
 
 /**
  * No individual-house endpoint exists; we derive the page from the id and fetch the paginated list to find the house within the response.
+ * A `null` result means the property was not found in the inferred page, not that the API can prove the id does not exist globally.
  * Network retries are handled by React Query (`retry`) on the consumer.
  */
 export async function fetchHouseById(
