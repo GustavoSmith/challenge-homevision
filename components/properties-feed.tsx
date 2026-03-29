@@ -11,8 +11,7 @@ import { PropertyCardSkeleton } from "./property-card-skeleton";
 const SKELETON_INITIAL = 6;
 const SKELETON_MORE = 3;
 
-const grid =
-  "grid grid-cols-1 gap-4 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4";
+const grid = "grid grid-cols-1 gap-4 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4";
 
 export function PropertiesFeed() {
   const {
@@ -21,6 +20,7 @@ export function PropertiesFeed() {
     hasNextPage,
     isError,
     isFetchNextPageError,
+    isFetching,
     isFetchingNextPage,
     isPending,
     isSuccess,
@@ -45,12 +45,7 @@ export function PropertiesFeed() {
     const observer = new IntersectionObserver(
       (entries) => {
         const [entry] = entries;
-        if (
-          entry?.isIntersecting &&
-          hasNextPage &&
-          !isFetchingNextPage &&
-          !isFetchNextPageError
-        ) {
+        if (entry?.isIntersecting && hasNextPage && !isFetchingNextPage && !isFetchNextPageError) {
           void fetchNextPage();
         }
       },
@@ -62,6 +57,7 @@ export function PropertiesFeed() {
   }, [fetchNextPage, hasNextPage, isFetchNextPageError, isFetchingNextPage]);
 
   const houses = data?.pages.flatMap((p) => p.houses) ?? [];
+  const isRetryingInitialLoad = isFetching && houses.length === 0;
 
   if (isPending) {
     return (
@@ -82,17 +78,26 @@ export function PropertiesFeed() {
         <p className="max-w-md text-sm text-muted-foreground">
           We ran into a problem while loading the properties. Please try again.
         </p>
-        <Button type="button" onClick={() => void refetch()}>
+        <Button
+          type="button"
+          className="gap-2"
+          onClick={() => void refetch()}
+          disabled={isRetryingInitialLoad}
+        >
           Try again
+          {isRetryingInitialLoad ? (
+            <span
+              className="size-4 animate-spin rounded-full border-2 border-current border-t-transparent"
+              aria-hidden="true"
+            />
+          ) : null}
         </Button>
       </div>
     );
   }
 
   if (isSuccess && houses.length === 0) {
-    return (
-      <p className="py-12 text-center text-muted-foreground">No properties to show.</p>
-    );
+    return <p className="py-12 text-center text-muted-foreground">No properties to show.</p>;
   }
 
   return (
@@ -113,8 +118,19 @@ export function PropertiesFeed() {
           <p className="max-w-md text-sm text-muted-foreground">
             We had a problem while loading more properties. Please try again.
           </p>
-          <Button type="button" onClick={() => void fetchNextPage()}>
+          <Button
+            type="button"
+            className="gap-2"
+            onClick={() => void fetchNextPage()}
+            disabled={isFetchingNextPage}
+          >
             Try again
+            {isFetchingNextPage ? (
+              <span
+                className="size-4 animate-spin rounded-full border-2 border-current border-t-transparent"
+                aria-hidden="true"
+              />
+            ) : null}
           </Button>
         </div>
       ) : null}

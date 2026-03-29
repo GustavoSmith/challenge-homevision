@@ -76,8 +76,7 @@ export function getPageForHouseId(id: number, perPage = PER_PAGE): number {
 }
 
 /**
- * No individual-house endpoint exists; we derive the page from the id
- * and fetch the paginated list to find the house within the response.
+ * No individual-house endpoint exists; we derive the page from the id and fetch the paginated list to find the house within the response.
  * Network retries are handled by React Query (`retry`) on the consumer.
  */
 export async function fetchHouseById(
