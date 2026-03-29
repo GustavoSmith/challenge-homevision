@@ -2,6 +2,8 @@
 
 An implementation of an infinite scroll property listing page, available at [challenge-homevision.vercel.app](https://challenge-homevision.vercel.app/)
 
+https://github.com/user-attachments/assets/a186e654-7ade-44b7-9944-c75acc501af0
+
 ### Running Locally
 
 This project is based on Next.js. Run the development server with:
