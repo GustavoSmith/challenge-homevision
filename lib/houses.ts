@@ -21,8 +21,7 @@ export type HousesApiResponse = HousesSuccessResponse | HousesErrorResponse;
 export const PER_PAGE = 20;
 export const PROPERTY_LISTING_RETURN_KEY = "homevision:property-listing-return-id";
 
-export const HOUSES_API_URL =
-  "https://staging.homevision.co/api_project/houses";
+export const HOUSES_API_URL = "https://staging.homevision.co/api_project/houses";
 
 function hasOkFlag(value: unknown): value is { ok: boolean } {
   return (
@@ -89,7 +88,7 @@ export async function fetchHousesPage(
 }
 
 export function getPageForHouseId(id: number, perPage = PER_PAGE): number {
-  return Math.floor(id / perPage) + 1;
+  return Math.ceil(id / perPage);
 }
 
 /**
@@ -97,10 +96,7 @@ export function getPageForHouseId(id: number, perPage = PER_PAGE): number {
  * A `null` result means the property was not found in the inferred page, not that the API can prove the id does not exist globally.
  * Network retries are handled by React Query (`retry`) on the consumer.
  */
-export async function fetchHouseById(
-  id: number,
-  perPage = PER_PAGE,
-): Promise<House | null> {
+export async function fetchHouseById(id: number, perPage = PER_PAGE): Promise<House | null> {
   const page = getPageForHouseId(id, perPage);
   const { houses } = await fetchHousesPage(page, perPage);
   return houses.find((h) => h.id === id) ?? null;

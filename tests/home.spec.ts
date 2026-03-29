@@ -20,9 +20,7 @@ const fakeHouses = [
 ];
 
 test.describe("Home page", () => {
-  test("shows loading skeleton then renders property cards on success", async ({
-    page,
-  }) => {
+  test("shows loading skeleton then renders property cards on success", async ({ page }) => {
     await page.route(API_URL, async (route) => {
       await new Promise((r) => setTimeout(r, 300));
       await route.fulfill({ json: { ok: true, houses: fakeHouses } });
@@ -38,9 +36,43 @@ test.describe("Home page", () => {
     await expect(page.getByTestId("feed-loading")).not.toBeAttached();
   });
 
-  test("shows error state with retry button when API fails", async ({
-    page,
-  }) => {
+  test("loads next page when scrolling to the bottom", async ({ page }) => {
+    const page1Houses = Array.from({ length: 20 }, (_, i) => ({
+      id: i + 1,
+      address: `Page 1 Street ${i + 1}`,
+      homeowner: `Owner ${i + 1}`,
+      price: 100_000 + i,
+      photoURL: "https://picsum.photos/300",
+    }));
+
+    const page2Houses = [
+      {
+        id: 21,
+        address: "Page 2 First St",
+        homeowner: "Page Two Owner",
+        price: 500_000,
+        photoURL: "https://picsum.photos/300",
+      },
+    ];
+
+    await page.route(API_URL, (route) => {
+      const url = new URL(route.request().url());
+      const pageNum = url.searchParams.get("page");
+      const houses = pageNum === "2" ? page2Houses : page1Houses;
+      return route.fulfill({ json: { ok: true, houses } });
+    });
+
+    await page.goto("/");
+
+    await expect(page.getByText("Page 1 Street 1").first()).toBeVisible();
+    await expect(page.getByText("Page 2 First St")).not.toBeAttached();
+
+    await page.evaluate(() => window.scrollTo(0, document.body.scrollHeight));
+
+    await expect(page.getByText("Page 2 First St")).toBeVisible();
+  });
+
+  test("shows error state with retry button when API fails", async ({ page }) => {
     await page.route(API_URL, (route) =>
       route.fulfill({
         status: 500,
@@ -50,13 +82,9 @@ test.describe("Home page", () => {
 
     await page.goto("/");
 
-    const alert = page
-      .getByRole("alert")
-      .filter({ hasText: "couldn't load the properties" });
+    const alert = page.getByRole("alert").filter({ hasText: "couldn't load the properties" });
     await expect(alert).toBeVisible();
 
-    await expect(
-      alert.getByRole("button", { name: "Try again" }),
-    ).toBeVisible();
+    await expect(alert.getByRole("button", { name: "Try again" })).toBeVisible();
   });
 });

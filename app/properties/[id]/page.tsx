@@ -64,7 +64,10 @@ function ResolvedProperty({ id }: { id: number }) {
 
 function DetailSkeleton() {
   return (
-    <div data-testid="detail-loading" className="relative flex min-h-full flex-1 flex-col overflow-hidden">
+    <div
+      data-testid="detail-loading"
+      className="relative flex min-h-full flex-1 flex-col overflow-hidden"
+    >
       <div className="mx-auto w-full max-w-6xl flex-1 px-4 py-8 sm:px-6 lg:px-8">
         <div className="mb-6 h-5 w-40 animate-pulse rounded bg-muted" />
         <div className="overflow-hidden rounded-xl border border-border/70 bg-card shadow-sm ring-1 ring-border/30">

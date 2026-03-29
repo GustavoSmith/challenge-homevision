@@ -44,7 +44,9 @@ export function PropertyCard({ house }: { house: House }) {
             {house.address}
           </CardTitle>
           <div>
-            <p className="text-xs font-medium uppercase tracking-wide text-muted-foreground">Owner</p>
+            <p className="text-xs font-medium uppercase tracking-wide text-muted-foreground">
+              Owner
+            </p>
             <p className="line-clamp-1 text-sm">{house.homeowner}</p>
           </div>
         </CardHeader>
