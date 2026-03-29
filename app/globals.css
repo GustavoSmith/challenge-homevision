@@ -29,3 +29,14 @@
   --destructive: oklch(0.577 0.245 27.325);
   --ring: oklch(0.52 0.1 165);
 }
+
+@supports (view-transition-name: test) {
+  .property-transition-media {
+    view-transition-class: property-image;
+  }
+
+  ::view-transition-group(*.property-image) {
+    animation-duration: 250ms;
+    animation-timing-function: ease;
+  }
+}

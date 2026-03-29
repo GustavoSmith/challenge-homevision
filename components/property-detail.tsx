@@ -1,5 +1,6 @@
 import Image from "next/image";
 import Link from "next/link";
+import { ViewTransition } from "react";
 import { ArrowLeft } from "lucide-react";
 
 import type { House } from "@/lib/houses";
@@ -11,6 +12,8 @@ const priceFormatter = new Intl.NumberFormat("en-US", {
 });
 
 export function PropertyDetail({ house }: { house: House }) {
+  const imageTransitionName = `property-image-${house.id}`;
+
   return (
     <div className="relative flex min-h-full flex-1 flex-col overflow-hidden">
       <div
@@ -29,16 +32,18 @@ export function PropertyDetail({ house }: { house: House }) {
 
         <div className="overflow-hidden rounded-xl border border-border/70 bg-card shadow-sm ring-1 ring-border/30">
           <div className="grid grid-cols-1 md:grid-cols-2">
-            <div className="relative aspect-[4/3] w-full bg-muted md:aspect-auto md:min-h-[400px]">
-              <Image
-                src={house.photoURL}
-                alt={house.address}
-                fill
-                priority
-                className="object-cover"
-                sizes="(max-width: 768px) 100vw, 50vw"
-              />
-            </div>
+            <ViewTransition name={imageTransitionName}>
+              <div className="property-transition-media relative aspect-[4/3] w-full bg-muted md:aspect-auto md:min-h-[400px]">
+                <Image
+                  src={house.photoURL}
+                  alt={house.address}
+                  fill
+                  priority
+                  className="object-cover"
+                  sizes="(max-width: 768px) 100vw, 50vw"
+                />
+              </div>
+            </ViewTransition>
 
             <div className="flex flex-col justify-center gap-6 p-6 sm:p-8 lg:p-10">
               <div className="space-y-1">
